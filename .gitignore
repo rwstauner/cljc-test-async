@@ -1,3 +1,4 @@
+.cljs_node_repl/
 .calva/output-window/
 .classpath
 .clj-kondo/.cache

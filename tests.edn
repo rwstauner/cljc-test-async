@@ -1,0 +1,7 @@
+#kaocha/v1
+{:tests [{:id :unit
+          :test-paths ["test"]}
+         {:id :unit-cljs
+          :type :kaocha.type/cljs
+          :test-paths ["test"]
+          :cljs/repl-env cljs.repl.node/repl-env}]}
