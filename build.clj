@@ -3,9 +3,9 @@
   (:require [org.corfield.build :as bb]))
 
 (def lib 'net.r4s6/test-async)
-(def version "0.2.0")
+(def version "0.3.0-SNAPSHOT")
 
-; FIXME: clj -M:test
+; FIXME: bump version and tag
 (defn test "Run the tests." [opts]
   (bb/run-tests opts))
 
