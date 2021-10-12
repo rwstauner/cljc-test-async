@@ -4,6 +4,14 @@ Utilities for writing async tests for both clj and cljs (cljc).
 
 ## Usage
 
+In `deps.edn`:
+
+```clojure
+{net.r4s6/test-async {:mvn/version "0.2.0"}}
+```
+
+In your tests:
+
 ```clojure
 (ns your-tests
   (:require
