@@ -12,13 +12,11 @@
                 (Thread/sleep 1000)
                 (t/is (= 1 1))
                 (done))
-         :cljs (do
-                 (prn :js)
-                 (js/setTimeout
-                   (fn []
-                     (t/is (= 1 1))
-                     (done))
-                   1000) [])))))
+         :cljs (js/setTimeout
+                 (fn []
+                   (t/is (= 1 1))
+                   (done))
+                 1000)))))
 
 (defn- foo
   []
