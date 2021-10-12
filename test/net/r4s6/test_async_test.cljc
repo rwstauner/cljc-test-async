@@ -72,3 +72,28 @@
   (t/testing "restored"
     (t/is (= "xy"
              (string/replace-first "yy" #"." "x")))))
+
+; Only one async per deftest.
+(t/deftest timeout-pass
+  (t/testing "passes"
+    (a/with-timeout
+      1000
+      (a/async
+        done
+        (t/is true)
+        (done)))))
+
+(t/deftest timeout-expires
+  (t/testing "would throw"
+    (let [cb (atom identity)]
+      ; redef at the outer-most so with-timeout in cljs can use partial.
+      (a/async-redefs
+        [a/throw-timeout (fn [t]
+                           (t/is (= t 1234))
+                           (@cb))]
+        reset-redefs
+        (a/with-timeout
+          1234
+          (a/async
+            done
+            (reset! cb (juxt reset-redefs done))))))))

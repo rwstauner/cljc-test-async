@@ -1,8 +1,10 @@
 (ns net.r4s6.test-async
   #?(:clj
-     (:require [net.cgrand.macrovich :as macros])
+     (:require
+       [net.cgrand.macrovich :as macros])
      :cljs
-     (:require-macros [net.cgrand.macrovich :as macros])))
+     (:require-macros
+       [net.cgrand.macrovich :as macros])))
 
 #?(:clj
    ; This code copied from clojure.core and modified to pass a function
@@ -51,6 +53,44 @@
                  done-fn# (fn [] ~@(map bind-value resets))]
              (body-fn# done-fn#)))))))
 
+(def ^:dynamic *timeout*
+  "Milliseconds for tests to complete before being aborted.  See also `with-timeout`."
+  10000)
+
+(macros/deftime
+  (defmacro with-timeout
+    "Sets *timeout* to the provided value (milliseconds) and evaluates the body forms."
+    [t & body]
+    `(binding [*timeout* ~t]
+       ~@body)))
+
+(defn throw-timeout
+  "Throw an error because an async task timed out."
+  [t]
+  (throw (ex-info (str "Async tests timed out after " t "ms")
+                  {:timeout t})))
+
+#?(:cljs
+   (defn wrap-with-timeout
+     "Wrap provided function with a js timeout."
+     [t f]
+     (let [id (js/setTimeout
+                (partial throw-timeout t)
+                t)]
+       (fn [& args]
+         (js/clearTimeout id)
+         (apply f args)))))
+
+
+#?(:clj
+   (defn handle-timeout
+     "Internal function used to throw if calling deref on the promise times out."
+     [p t]
+     (if t
+       (when (= ::timeout
+                (deref p t ::timeout))
+         (throw-timeout t))
+       (deref p))))
 
 (macros/deftime
   (defmacro async
@@ -62,9 +102,17 @@
      (async done (...))"
     [done & body]
     (macros/case
-      :cljs `(cljs.test/async ~done ~@body)
+      :cljs `(if (not *timeout*)
+               (cljs.test/async ~done ~@body)
+               ; Grab current *timeout* value at start time
+               ; before we get passed to async context.
+               (let [timeout# *timeout*]
+                 (cljs.test/async
+                   done#
+                   (let [~done (wrap-with-timeout timeout# done#)]
+                     ~@body))))
       :clj  `(let [p# (promise)
                    done# (partial deliver p# ::done)
                    b# (fn [~done] ~@body)]
                (future (b# done#))
-               (deref p#)))))
+               (handle-timeout p# *timeout*)))))

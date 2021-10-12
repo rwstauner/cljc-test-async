@@ -3,7 +3,7 @@
   (:require [org.corfield.build :as bb]))
 
 (def lib 'net.r4s6/test-async)
-(def version "0.1.0")
+(def version "0.2.0")
 
 ; FIXME: clj -M:test
 (defn test "Run the tests." [opts]
