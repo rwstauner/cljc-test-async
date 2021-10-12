@@ -1,0 +1,6 @@
+{:lint-as
+ {net.r4s6.test-async/async cljs.test/async}
+
+ :linters
+ {:unresolved-symbol
+  {:exclude [(net.r4s6.test-async/async-redefs)]}}}
