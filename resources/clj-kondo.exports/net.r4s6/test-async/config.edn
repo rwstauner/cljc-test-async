@@ -1,0 +1,5 @@
+{:lint-as
+ {net.r4s6.test-async/async cljs.test/async}
+ :hooks
+ {:analyze-call
+  {net.r4s6.test-async/async-redefs net.r4s6.test-async.hooks/async-redefs}}}
