@@ -44,6 +44,8 @@ Works just like `cljs.test/async`
 In this example `done` is the name that the callback function
 will be bound to in the body.
 
+NOTE: It should be called without arguments.
+
 ### async-redefs
 
 Like `clojure.core/with-redefs` but instead of restoring defs at the end of the
@@ -61,6 +63,8 @@ block it defines a callback function that your block should call when finished
 
 In this example `reset-redefs` is the name that the callback function
 will be bound to in the body.
+
+NOTE: It should be called without arguments.
 
 ### with-timeout
 

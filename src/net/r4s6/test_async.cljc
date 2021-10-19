@@ -99,7 +99,9 @@
      In cljs delegates to cljs.test/async.
      In clj it provides the same interface to run the provided body async and simply waits for it to complete.
 
-     (async done (...))"
+    The callback function should be called without arguments.
+
+     (async done (do ... (done)))"
     [done & body]
     (macros/case
       :cljs `(if (not *timeout*)
