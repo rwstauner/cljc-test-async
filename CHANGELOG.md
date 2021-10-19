@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## 0.3.0 - 2021-10-17
+
+- Include clj-kondo linter config for `async` and `async-redefs`.
+- Document that "done" callback accepts no arguments.
+
 ## 0.2.0 - 2021-10-12
 
 - By default abort async tests if they take longer than 10 seconds.
